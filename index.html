@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IoT Programming – Raspberry Pi Labs</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #2d3748;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #63b3ed, #76e4f7, #9f7aea);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    .section {
+      background: #1a202c;
+      border: 1px solid #2d3748;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background: linear-gradient(135deg, #2d3748, #1e2535);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid #2d3748;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .icon-gpio  { background: rgba(99,179,237,0.15); }
+    .icon-cam   { background: rgba(154,205,80,0.15); }
+    .icon-matrix{ background: rgba(159,122,234,0.15); }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: #718096;
+      margin-top: 2px;
+    }
+
+    .code-area {
+      padding: 1.5rem;
+    }
+
+    .code-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+    }
+
+    pre {
+      background: #0d1117;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    /* Syntax highlighting */
+    .kw  { color: #ff7b72; }   /* keywords */
+    .bi  { color: #79c0ff; }   /* builtins / imports */
+    .fn  { color: #d2a8ff; }   /* functions */
+    .st  { color: #a5d6ff; }   /* strings */
+    .cm  { color: #8b949e; font-style: italic; } /* comments */
+    .nu  { color: #f9c97c; }   /* numbers */
+    .at  { color: #ffa657; }   /* attributes / class names */
+    .op  { color: #ff7b72; }   /* operators */
+
+    .code-block {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      color: #a0aec0;
+      font-size: 0.72rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-weight: 600;
+      padding: 0.3rem 0.65rem;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+
+    .copy-btn:hover {
+      background: #3d4f63;
+      border-color: #63b3ed;
+      color: #e2e8f0;
+    }
+
+    .copy-btn.copied {
+      background: rgba(72,187,120,0.15);
+      border-color: #48bb78;
+      color: #48bb78;
+    }
+
+    .divider {
+      height: 1px;
+      background: #2d3748;
+      margin: 1.5rem 0;
+    }
+
+    footer {
+      text-align: center;
+      color: #4a5568;
+      font-size: 0.8rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #2d3748;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>IoT Programming — Raspberry Pi Labs</h1>
+    <p>GPIO · SPI · Matrix LED Programming</p>
+  </header>
+
+  <!-- SECTION 1: GPIO LED -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-gpio">💡</div>
+      <div>
+        <div class="section-title">Aim: GPIO — Light the LED</div>
+        <div class="section-subtitle">With and without Button | RPi.GPIO · BCM mode</div>
+      </div>
+    </div>
+    <div class="code-area">
+
+      <div class="code-label">Without Button — Blink LED on GPIO 18</div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
+      <pre><span class="kw">import</span> <span class="bi">RPi.GPIO</span> <span class="kw">as</span> GPIO
+<span class="kw">from</span> <span class="bi">time</span> <span class="kw">import</span> sleep
+
+ledPin = <span class="nu">18</span>
+
+GPIO.<span class="fn">setmode</span>(GPIO.BCM)
+GPIO.<span class="fn">setup</span>(ledPin, GPIO.OUT)
+
+<span class="kw">try</span>:
+    <span class="kw">while</span> <span class="kw">True</span>:
+        GPIO.<span class="fn">output</span>(ledPin, <span class="kw">True</span>)
+        <span class="fn">print</span>(<span class="st">"LED ON"</span>)
+        <span class="fn">sleep</span>(<span class="nu">1</span>)
+        GPIO.<span class="fn">output</span>(ledPin, <span class="kw">False</span>)
+        <span class="fn">print</span>(<span class="st">"LED OFF"</span>)
+        <span class="fn">sleep</span>(<span class="nu">1</span>)
+<span class="kw">finally</span>:
+    GPIO.<span class="fn">output</span>(ledPin, <span class="kw">False</span>)
+    GPIO.<span class="fn">cleanup</span>()</pre></div>
+
+      <div class="divider"></div>
+
+      <div class="code-label">With Button — Button on GPIO 23, LED on GPIO 24</div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
+      <pre><span class="cm"># with button</span>
+<span class="kw">import</span> <span class="bi">RPi.GPIO</span> <span class="kw">as</span> GPIO
+<span class="kw">import</span> <span class="bi">time</span>
+
+GPIO.<span class="fn">setmode</span>(GPIO.BCM)
+GPIO.<span class="fn">setup</span>(<span class="nu">23</span>, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.<span class="fn">setup</span>(<span class="nu">24</span>, GPIO.OUT)
+
+<span class="kw">try</span>:
+    <span class="kw">while</span> <span class="kw">True</span>:
+        button_state = GPIO.<span class="fn">input</span>(<span class="nu">23</span>)
+        <span class="kw">if</span> button_state <span class="op">==</span> <span class="kw">False</span>:
+            GPIO.<span class="fn">output</span>(<span class="nu">24</span>, <span class="kw">True</span>)
+            <span class="fn">print</span>(<span class="st">'Button Pressed...'</span>)
+            time.<span class="fn">sleep</span>(<span class="nu">0.2</span>)
+        <span class="kw">else</span>:
+            GPIO.<span class="fn">output</span>(<span class="nu">24</span>, <span class="kw">False</span>)
+<span class="kw">except</span>:
+    GPIO.<span class="fn">cleanup</span>()</pre></div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 2: Camera -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-cam">📷</div>
+      <div>
+        <div class="section-title">Aim: SPI Interface — Camera Module Integration</div>
+        <div class="section-subtitle">PiCamera · 1280×720 capture</div>
+      </div>
+    </div>
+    <div class="code-area">
+      <div class="code-label">Capture image with PiCamera</div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
+      <pre><span class="kw">from</span> <span class="bi">time</span> <span class="kw">import</span> sleep
+<span class="kw">from</span> <span class="bi">picamera</span> <span class="kw">import</span> <span class="at">PiCamera</span>
+
+camera = <span class="at">PiCamera</span>()
+camera.resolution = (<span class="nu">1280</span>, <span class="nu">720</span>)
+camera.<span class="fn">start_preview</span>()
+<span class="fn">sleep</span>(<span class="nu">2</span>)
+camera.<span class="fn">capture</span>(<span class="st">'/home/pi/Pictures/newImage.jpg'</span>)
+camera.<span class="fn">stop_preview</span>()
+camera.<span class="fn">close</span>()</pre></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: LED Matrix -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-matrix">🔲</div>
+      <div>
+        <div class="section-title">Aim: 8×8 LED Grid Control</div>
+        <div class="section-subtitle">Matrix LED Programming · MAX7219 · Luma library · Live clock display</div>
+      </div>
+    </div>
+    <div class="code-area">
+      <div class="code-label">Display live time on 8×8 LED matrix via SPI</div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
+      <pre><span class="kw">from</span> <span class="bi">luma.led_matrix.device</span> <span class="kw">import</span> <span class="at">max7219</span>
+<span class="kw">from</span> <span class="bi">luma.core.interface.serial</span> <span class="kw">import</span> spi, noop
+<span class="kw">from</span> <span class="bi">luma.core.render</span> <span class="kw">import</span> canvas
+<span class="kw">from</span> <span class="bi">luma.core.legacy</span> <span class="kw">import</span> text
+<span class="kw">from</span> <span class="bi">luma.core.legacy.font</span> <span class="kw">import</span> proportional, TINY_FONT
+<span class="kw">from</span> <span class="bi">datetime</span> <span class="kw">import</span> datetime
+<span class="kw">import</span> <span class="bi">time</span>
+
+serial = <span class="fn">spi</span>(port=<span class="nu">0</span>, device=<span class="nu">0</span>, gpio=<span class="fn">noop</span>())
+device = <span class="fn">max7219</span>(
+    serial,
+    cascaded=<span class="nu">1</span>,
+    block_orientation=<span class="nu">-90</span>,
+    blocks_arranged_in_reverse_order=<span class="kw">True</span>
+)
+device.<span class="fn">contrast</span>(<span class="nu">16</span>)
+
+<span class="kw">def</span> <span class="fn">test</span>():
+    now = datetime.<span class="fn">now</span>()
+    dt1_string = now.<span class="fn">strftime</span>(<span class="st">"%I:%M:%S"</span>)
+    <span class="kw">with</span> <span class="fn">canvas</span>(device) <span class="kw">as</span> draw:
+        <span class="fn">text</span>(draw, (<span class="nu">3</span>, <span class="nu">1</span>), dt1_string, fill=<span class="st">"white"</span>,
+             font=<span class="fn">proportional</span>(TINY_FONT))
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="fn">test</span>()
+    time.<span class="fn">sleep</span>(<span class="nu">1</span>)</pre></div>
+    </div>
+  </div>
+
+  <footer>Converted from .docx · Raspberry Pi IoT Lab Notes</footer>
+
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.innerText;
+
+    function onSuccess() {
+      btn.innerHTML = '&#10003; Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '&#128203; Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    // Try modern clipboard API first
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess));
+    } else {
+      fallbackCopy(text, onSuccess);
+    }
+  }
+
+  function fallbackCopy(text, onSuccess) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      onSuccess();
+    } catch (e) {
+      alert('Copy failed — please manually select the code and press Ctrl+C / Cmd+C.');
+    }
+    document.body.removeChild(ta);
+  }
+</script>
+</body>
+</html>

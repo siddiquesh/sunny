@@ -1,352 +1,1279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IoT Programming – Raspberry Pi Labs</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DA with SAS – Practice Questions</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1eb;
+    --surface: #faf8f4;
+    --card: #ffffff;
+    --border: #e2ddd5;
+    --shadow: rgba(0,0,0,0.07);
+    --text: #1a1814;
+    --muted: #7a7060;
+    --accent: #c94a2b;
+    --accent2: #2b6cb0;
+    --green: #276749;
+    --code-bg: #1c1917;
+    --code-text: #e8e0d0;
+    --mod1: #c94a2b;
+    --mod2: #2b6cb0;
+  }
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #0f1117;
-      color: #e2e8f0;
-      line-height: 1.7;
-      padding: 2rem 1rem;
-    }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    padding: 0 1rem 5rem;
+  }
 
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #2d3748;
-    }
+  /* ── TOP BANNER ── */
+  .banner {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 3rem 2rem 2.6rem;
+    margin: 0 -1rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 30px,
+      rgba(255,255,255,0.015) 30px,
+      rgba(255,255,255,0.015) 31px
+    );
+    pointer-events: none;
+  }
+  .banner-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .banner .chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 0.2rem 0.7rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  .banner h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: #fff;
+  }
+  .banner h1 span { color: var(--accent); }
+  .banner .sub {
+    margin-top: 0.7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: #7a7060;
+  }
+  .mod-pills {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+    flex-wrap: wrap;
+  }
+  .mod-pill {
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+  }
+  .mod-pill:hover { opacity: 0.8; }
+  .mod-pill.m1 { background: var(--mod1); color: #fff; }
+  .mod-pill.m2 { background: var(--mod2); color: #fff; }
 
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #63b3ed, #76e4f7, #9f7aea);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
+  /* ── LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; }
 
-    header p {
-      color: #718096;
-      font-size: 0.95rem;
-    }
+  .module-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0 1rem;
+  }
+  .module-title .line {
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+  }
+  .module-title.m1 { color: var(--mod1); }
+  .module-title.m1 .line { background: var(--mod1); opacity: 0.25; }
+  .module-title.m2 { color: var(--mod2); }
+  .module-title.m2 .line { background: var(--mod2); opacity: 0.25; }
 
-    .section {
-      background: #1a202c;
-      border: 1px solid #2d3748;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      overflow: hidden;
-    }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px var(--shadow);
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-    .section-header {
-      background: linear-gradient(135deg, #2d3748, #1e2535);
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border-bottom: 1px solid #2d3748;
-    }
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .q-header:hover { background: #faf7f2; }
 
-    .section-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.22rem 0.6rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .m1 .q-num { background: var(--mod1); }
+  .m2 .q-num { background: var(--mod2); }
 
-    .icon-gpio  { background: rgba(99,179,237,0.15); }
-    .icon-cam   { background: rgba(154,205,80,0.15); }
-    .icon-matrix{ background: rgba(159,122,234,0.15); }
+  .q-text {
+    flex: 1;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text);
+  }
 
-    .section-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #e2e8f0;
-    }
+  .q-arrow {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-top: 2px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .q-card.open .q-arrow { transform: rotate(90deg); }
 
-    .section-subtitle {
-      font-size: 0.8rem;
-      color: #718096;
-      margin-top: 2px;
-    }
+  .q-body {
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+  .q-card.open .q-body { display: block; }
 
-    .code-area {
-      padding: 1.5rem;
-    }
+  /* code block */
+  .code-wrap {
+    position: relative;
+    background: var(--code-bg);
+  }
+  .code-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a5248;
+    padding: 0.55rem 1.2rem 0.3rem;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.8rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #5a5248;
+    background: #2a2520;
+    border: 1px solid #3a3530;
+    border-radius: 5px;
+    padding: 0.22rem 0.6rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .copy-btn:hover { color: #c9a26a; border-color: #c9a26a; }
 
-    .code-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #4a5568;
-      margin-bottom: 0.5rem;
-    }
+  pre {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--code-text);
+    padding: 0.4rem 1.2rem 1.2rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
 
-    pre {
-      background: #0d1117;
-      border: 1px solid #2d3748;
-      border-radius: 8px;
-      padding: 1.2rem 1.4rem;
-      overflow-x: auto;
-      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-      font-size: 0.875rem;
-      line-height: 1.65;
-    }
+  /* SAS syntax colours */
+  .kw  { color: #e8a87c; font-weight: 600; }   /* PROC DATA RUN etc */
+  .kw2 { color: #7ec8e3; }                       /* BY VAR CLASS etc */
+  .fn  { color: #98c379; }                       /* functions */
+  .str { color: #e5c07b; }                       /* strings */
+  .cm  { color: #4a5260; font-style: italic; }   /* comments */
+  .num { color: #d19a66; }                       /* numbers */
+  .op  { color: #abb2bf; }                       /* operators */
 
-    /* Syntax highlighting */
-    .kw  { color: #ff7b72; }   /* keywords */
-    .bi  { color: #79c0ff; }   /* builtins / imports */
-    .fn  { color: #d2a8ff; }   /* functions */
-    .st  { color: #a5d6ff; }   /* strings */
-    .cm  { color: #8b949e; font-style: italic; } /* comments */
-    .nu  { color: #f9c97c; }   /* numbers */
-    .at  { color: #ffa657; }   /* attributes / class names */
-    .op  { color: #ff7b72; }   /* operators */
+  /* explanation section */
+  .explanation {
+    padding: 1rem 1.4rem 1.2rem;
+    background: var(--surface);
+  }
+  .explanation h4 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.65rem;
+  }
+  .explanation ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .explanation ul li {
+    font-size: 0.87rem;
+    line-height: 1.55;
+    color: #3a3530;
+    padding-left: 1.1rem;
+    position: relative;
+  }
+  .explanation ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .explanation ul li code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    background: #ede8e0;
+    border-radius: 4px;
+    padding: 0.05rem 0.35rem;
+    color: #c94a2b;
+  }
 
-    .code-block {
-      position: relative;
-    }
+  /* note box */
+  .note-box {
+    margin: 0 1.4rem 1rem;
+    background: #fffbf0;
+    border-left: 3px solid #e5c07b;
+    border-radius: 0 6px 6px 0;
+    padding: 0.6rem 1rem;
+    font-size: 0.83rem;
+    color: #5a4a20;
+    line-height: 1.55;
+  }
+  .note-box strong { font-weight: 700; }
 
-    .copy-btn {
-      position: absolute;
-      top: 0.6rem;
-      right: 0.6rem;
-      background: #2d3748;
-      border: 1px solid #4a5568;
-      color: #a0aec0;
-      font-size: 0.72rem;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-weight: 600;
-      padding: 0.3rem 0.65rem;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      user-select: none;
-    }
+  /* alt code */
+  .alt-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a5248;
+    padding: 0.55rem 1.2rem 0.3rem;
+  }
 
-    .copy-btn:hover {
-      background: #3d4f63;
-      border-color: #63b3ed;
-      color: #e2e8f0;
-    }
+  /* progress bar at top */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--mod1), var(--mod2));
+    z-index: 9999;
+    transition: width 0.1s;
+  }
 
-    .copy-btn.copied {
-      background: rgba(72,187,120,0.15);
-      border-color: #48bb78;
-      color: #48bb78;
-    }
-
-    .divider {
-      height: 1px;
-      background: #2d3748;
-      margin: 1.5rem 0;
-    }
-
-    footer {
-      text-align: center;
-      color: #4a5568;
-      font-size: 0.8rem;
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #2d3748;
-    }
-  </style>
+  /* search */
+  .search-wrap {
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+  }
+  .search-input {
+    width: 100%;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem 0.75rem 2.6rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%237a7060' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0.8rem center;
+  }
+  .search-input:focus { border-color: var(--accent2); }
+</style>
 </head>
 <body>
-<div class="container">
 
-  <header>
-    <h1>IoT Programming — Raspberry Pi Labs</h1>
-    <p>GPIO · SPI · Matrix LED Programming</p>
-  </header>
+<div class="progress-bar" id="pbar"></div>
 
-  <!-- SECTION 1: GPIO LED -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-gpio">💡</div>
-      <div>
-        <div class="section-title">Aim: GPIO — Light the LED</div>
-        <div class="section-subtitle">With and without Button | RPi.GPIO · BCM mode</div>
-      </div>
-    </div>
-    <div class="code-area">
-
-      <div class="code-label">Without Button — Blink LED on GPIO 18</div>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
-      <pre><span class="kw">import</span> <span class="bi">RPi.GPIO</span> <span class="kw">as</span> GPIO
-<span class="kw">from</span> <span class="bi">time</span> <span class="kw">import</span> sleep
-
-ledPin = <span class="nu">18</span>
-
-GPIO.<span class="fn">setmode</span>(GPIO.BCM)
-GPIO.<span class="fn">setup</span>(ledPin, GPIO.OUT)
-
-<span class="kw">try</span>:
-    <span class="kw">while</span> <span class="kw">True</span>:
-        GPIO.<span class="fn">output</span>(ledPin, <span class="kw">True</span>)
-        <span class="fn">print</span>(<span class="st">"LED ON"</span>)
-        <span class="fn">sleep</span>(<span class="nu">1</span>)
-        GPIO.<span class="fn">output</span>(ledPin, <span class="kw">False</span>)
-        <span class="fn">print</span>(<span class="st">"LED OFF"</span>)
-        <span class="fn">sleep</span>(<span class="nu">1</span>)
-<span class="kw">finally</span>:
-    GPIO.<span class="fn">output</span>(ledPin, <span class="kw">False</span>)
-    GPIO.<span class="fn">cleanup</span>()</pre></div>
-
-      <div class="divider"></div>
-
-      <div class="code-label">With Button — Button on GPIO 23, LED on GPIO 24</div>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
-      <pre><span class="cm"># with button</span>
-<span class="kw">import</span> <span class="bi">RPi.GPIO</span> <span class="kw">as</span> GPIO
-<span class="kw">import</span> <span class="bi">time</span>
-
-GPIO.<span class="fn">setmode</span>(GPIO.BCM)
-GPIO.<span class="fn">setup</span>(<span class="nu">23</span>, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.<span class="fn">setup</span>(<span class="nu">24</span>, GPIO.OUT)
-
-<span class="kw">try</span>:
-    <span class="kw">while</span> <span class="kw">True</span>:
-        button_state = GPIO.<span class="fn">input</span>(<span class="nu">23</span>)
-        <span class="kw">if</span> button_state <span class="op">==</span> <span class="kw">False</span>:
-            GPIO.<span class="fn">output</span>(<span class="nu">24</span>, <span class="kw">True</span>)
-            <span class="fn">print</span>(<span class="st">'Button Pressed...'</span>)
-            time.<span class="fn">sleep</span>(<span class="nu">0.2</span>)
-        <span class="kw">else</span>:
-            GPIO.<span class="fn">output</span>(<span class="nu">24</span>, <span class="kw">False</span>)
-<span class="kw">except</span>:
-    GPIO.<span class="fn">cleanup</span>()</pre></div>
-
+<div class="banner">
+  <div class="banner-inner">
+    <div class="chip">Practice Questions</div>
+    <h1>DA with <span>SAS</span></h1>
+    <div class="sub">// 30 questions across 2 modules</div>
+    <div class="mod-pills">
+      <button class="mod-pill m1" onclick="scrollTo('#mod1')">Module 1 · Data Handling &amp; Transformation</button>
+      <button class="mod-pill m2" onclick="scrollTo('#mod2')">Module 2 · Statistical Analysis &amp; Reporting</button>
     </div>
   </div>
-
-  <!-- SECTION 2: Camera -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-cam">📷</div>
-      <div>
-        <div class="section-title">Aim: SPI Interface — Camera Module Integration</div>
-        <div class="section-subtitle">PiCamera · 1280×720 capture</div>
-      </div>
-    </div>
-    <div class="code-area">
-      <div class="code-label">Capture image with PiCamera</div>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
-      <pre><span class="kw">from</span> <span class="bi">time</span> <span class="kw">import</span> sleep
-<span class="kw">from</span> <span class="bi">picamera</span> <span class="kw">import</span> <span class="at">PiCamera</span>
-
-camera = <span class="at">PiCamera</span>()
-camera.resolution = (<span class="nu">1280</span>, <span class="nu">720</span>)
-camera.<span class="fn">start_preview</span>()
-<span class="fn">sleep</span>(<span class="nu">2</span>)
-camera.<span class="fn">capture</span>(<span class="st">'/home/pi/Pictures/newImage.jpg'</span>)
-camera.<span class="fn">stop_preview</span>()
-camera.<span class="fn">close</span>()</pre></div>
-    </div>
-  </div>
-
-  <!-- SECTION 3: LED Matrix -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-matrix">🔲</div>
-      <div>
-        <div class="section-title">Aim: 8×8 LED Grid Control</div>
-        <div class="section-subtitle">Matrix LED Programming · MAX7219 · Luma library · Live clock display</div>
-      </div>
-    </div>
-    <div class="code-area">
-      <div class="code-label">Display live time on 8×8 LED matrix via SPI</div>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">&#128203; Copy</button>
-      <pre><span class="kw">from</span> <span class="bi">luma.led_matrix.device</span> <span class="kw">import</span> <span class="at">max7219</span>
-<span class="kw">from</span> <span class="bi">luma.core.interface.serial</span> <span class="kw">import</span> spi, noop
-<span class="kw">from</span> <span class="bi">luma.core.render</span> <span class="kw">import</span> canvas
-<span class="kw">from</span> <span class="bi">luma.core.legacy</span> <span class="kw">import</span> text
-<span class="kw">from</span> <span class="bi">luma.core.legacy.font</span> <span class="kw">import</span> proportional, TINY_FONT
-<span class="kw">from</span> <span class="bi">datetime</span> <span class="kw">import</span> datetime
-<span class="kw">import</span> <span class="bi">time</span>
-
-serial = <span class="fn">spi</span>(port=<span class="nu">0</span>, device=<span class="nu">0</span>, gpio=<span class="fn">noop</span>())
-device = <span class="fn">max7219</span>(
-    serial,
-    cascaded=<span class="nu">1</span>,
-    block_orientation=<span class="nu">-90</span>,
-    blocks_arranged_in_reverse_order=<span class="kw">True</span>
-)
-device.<span class="fn">contrast</span>(<span class="nu">16</span>)
-
-<span class="kw">def</span> <span class="fn">test</span>():
-    now = datetime.<span class="fn">now</span>()
-    dt1_string = now.<span class="fn">strftime</span>(<span class="st">"%I:%M:%S"</span>)
-    <span class="kw">with</span> <span class="fn">canvas</span>(device) <span class="kw">as</span> draw:
-        <span class="fn">text</span>(draw, (<span class="nu">3</span>, <span class="nu">1</span>), dt1_string, fill=<span class="st">"white"</span>,
-             font=<span class="fn">proportional</span>(TINY_FONT))
-
-<span class="kw">while</span> <span class="kw">True</span>:
-    <span class="fn">test</span>()
-    time.<span class="fn">sleep</span>(<span class="nu">1</span>)</pre></div>
-    </div>
-  </div>
-
-  <footer>Converted from .docx · Raspberry Pi IoT Lab Notes</footer>
-
 </div>
 
+<div class="search-wrap">
+  <input class="search-input" type="text" placeholder="Search questions…" id="searchBox" oninput="filterCards()">
+</div>
+
+<div class="container">
+
+  <!-- MODULE 1 -->
+  <div class="module-title m1" id="mod1">
+    Module 1
+    <span style="font-weight:400;font-size:0.9rem;text-transform:none;letter-spacing:0;">Data Handling, Preparation and Transformation</span>
+    <span class="line"></span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q1</span>
+      <span class="q-text">Import a CSV file <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">students.csv</code> into SAS and create a dataset named <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">students_data</code>. Display the first 10 observations.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Step 1: Import CSV file into SAS dataset */</span>
+<span class="kw">PROC IMPORT</span> DATAFILE=<span class="str">"students.csv"</span>
+    <span class="kw2">OUT</span>=students_data
+    <span class="kw2">DBMS</span>=CSV
+    REPLACE;
+    GETNAMES=YES;
+<span class="kw">RUN</span>;
+
+<span class="cm">/* Step 2: Display first 10 observations */</span>
+<span class="kw">PROC PRINT</span> DATA=students_data (<span class="kw2">OBS</span>=<span class="num">10</span>);
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC IMPORT</code> — Reads the CSV file and creates dataset students_data</li>
+          <li><code>DBMS=CSV</code> — Specifies the file type as CSV</li>
+          <li><code>GETNAMES=YES</code> — Uses the first row as variable names</li>
+          <li><code>PROC PRINT (OBS=10)</code> — Displays only the first 10 rows</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q2</span>
+      <span class="q-text">Create a SAS dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">employee_data</code> using DATALINES with variables Emp_ID, Name, Department, Salary. Enter at least 5 records and display the dataset.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Step 1: Create dataset using DATALINES */</span>
+<span class="kw">DATA</span> employee_data;
+    <span class="kw2">INPUT</span> Emp_ID Name $ Department $ Salary;
+    <span class="kw2">DATALINES</span>;
+<span class="num">101</span> Amit HR <span class="num">30000</span>
+<span class="num">102</span> Neha IT <span class="num">45000</span>
+<span class="num">103</span> Raj Sales <span class="num">35000</span>
+<span class="num">104</span> Priya Finance <span class="num">40000</span>
+<span class="num">105</span> Karan IT <span class="num">50000</span>
+;
+<span class="kw">RUN</span>;
+
+<span class="cm">/* Step 2: Display the dataset */</span>
+<span class="kw">PROC PRINT</span> DATA=employee_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>DATA employee_data;</code> — Creates a new dataset</li>
+          <li><code>INPUT</code> — Defines variables ($ for character variables like Name &amp; Department)</li>
+          <li><code>DATALINES</code> — Used to manually enter data inline</li>
+          <li><code>PROC PRINT</code> — Displays the dataset</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q3</span>
+      <span class="q-text">Display the contents and structure of dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">sales_data</code> using appropriate SAS procedure.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Display structure and metadata of dataset */</span>
+<span class="kw">PROC CONTENTS</span> DATA=sales_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC CONTENTS</code> — Shows full structure of the dataset</li>
+          <li>Displays variable names, data types (numeric/character), length, labels, formats, number of observations and variables</li>
+        </ul>
+      </div>
+      <div class="note-box"><strong>Tip:</strong> For a shorter output showing only variables, use <code style="font-family:monospace;font-size:0.85em">PROC CONTENTS DATA=sales_data SHORT;</code></div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q4</span>
+      <span class="q-text">From dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">student_marks</code>, display only students whose Marks are greater than 60.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Display students with Marks > 60 */</span>
+<span class="kw">PROC PRINT</span> DATA=student_marks;
+    <span class="kw2">WHERE</span> Marks <span class="op">&gt;</span> <span class="num">60</span>;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>WHERE Marks &gt; 60;</code> — Filters dataset to show only students scoring above 60</li>
+          <li><code>PROC PRINT</code> — Displays the filtered records</li>
+        </ul>
+      </div>
+      <div class="code-wrap">
+        <div class="alt-label">Alternative (DATA step)</div>
+        <pre><span class="kw">DATA</span> filtered_students;
+    <span class="kw2">SET</span> student_marks;
+    <span class="kw2">IF</span> Marks <span class="op">&gt;</span> <span class="num">60</span>;
+<span class="kw">RUN</span>;
+<span class="kw">PROC PRINT</span> DATA=filtered_students;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q5</span>
+      <span class="q-text">Sort dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">customer_data</code> by Customer_ID and display the sorted dataset.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Step 1: Sort dataset */</span>
+<span class="kw">PROC SORT</span> DATA=customer_data
+    <span class="kw2">OUT</span>=sorted_customer_data;
+    <span class="kw2">BY</span> Customer_ID;
+<span class="kw">RUN</span>;
+
+<span class="cm">/* Step 2: Display sorted dataset */</span>
+<span class="kw">PROC PRINT</span> DATA=sorted_customer_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC SORT</code> — Sorts the dataset</li>
+          <li><code>BY Customer_ID;</code> — Sorts in ascending order by Customer_ID</li>
+          <li><code>OUT=sorted_customer_data</code> — Stores result in a new dataset</li>
+        </ul>
+      </div>
+      <div class="note-box"><strong>Tip:</strong> For descending order use <code style="font-family:monospace;font-size:0.85em">BY DESCENDING Customer_ID;</code></div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q6</span>
+      <span class="q-text">Remove duplicate records from dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">customer_data</code> based on Customer_ID.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Remove duplicate records */</span>
+<span class="kw">PROC SORT</span> DATA=customer_data
+    <span class="kw2">OUT</span>=unique_customer_data
+    NODUPKEY;
+    <span class="kw2">BY</span> Customer_ID;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=unique_customer_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>NODUPKEY</code> — Removes duplicate records based on the BY variable</li>
+          <li><code>BY Customer_ID;</code> — Keeps only the first occurrence of each Customer_ID</li>
+          <li><code>OUT=unique_customer_data</code> — Stores the deduplicated result</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q7</span>
+      <span class="q-text">Merge two datasets <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">student_info</code> and <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">student_marks</code> using Student_ID and display the merged dataset.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Step 1: Sort both datasets by Student_ID */</span>
+<span class="kw">PROC SORT</span> DATA=student_info;
+    <span class="kw2">BY</span> Student_ID;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC SORT</span> DATA=student_marks;
+    <span class="kw2">BY</span> Student_ID;
+<span class="kw">RUN</span>;
+
+<span class="cm">/* Step 2: Merge datasets */</span>
+<span class="kw">DATA</span> merged_data;
+    <span class="kw2">MERGE</span> student_info student_marks;
+    <span class="kw2">BY</span> Student_ID;
+<span class="kw">RUN</span>;
+
+<span class="cm">/* Step 3: Display merged dataset */</span>
+<span class="kw">PROC PRINT</span> DATA=merged_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li>Both datasets must be sorted by the common variable (Student_ID) before merging</li>
+          <li><code>MERGE</code> — Combines datasets horizontally</li>
+          <li><code>BY Student_ID;</code> — Matches records based on Student_ID</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q8</span>
+      <span class="q-text">Combine datasets <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">classA</code> and <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">classB</code> into a single dataset using SET.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Combine datasets (vertical stack) */</span>
+<span class="kw">DATA</span> combined_class;
+    <span class="kw2">SET</span> classA classB;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=combined_class;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>SET classA classB;</code> — Appends (stacks) classB below classA vertically</li>
+          <li><code>DATA combined_class;</code> — Creates a new combined dataset</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q9</span>
+      <span class="q-text">From dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">employee_data</code>, keep only variables Emp_ID, Name, Salary and display the dataset.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Keep only selected variables */</span>
+<span class="kw">DATA</span> filtered_employee;
+    <span class="kw2">SET</span> employee_data;
+    <span class="kw2">KEEP</span> Emp_ID Name Salary;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=filtered_employee;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>KEEP Emp_ID Name Salary;</code> — Retains only these columns</li>
+          <li>All other variables are dropped from the output dataset</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q10</span>
+      <span class="q-text">Rename variable <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">Salary</code> to <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">Monthly_Salary</code> in dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">employee_data</code>.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Rename variable */</span>
+<span class="kw">DATA</span> employee_data_renamed;
+    <span class="kw2">SET</span> employee_data;
+    <span class="kw2">RENAME</span> Salary <span class="op">=</span> Monthly_Salary;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=employee_data_renamed;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>RENAME Salary = Monthly_Salary;</code> — Changes the variable name</li>
+          <li>A new dataset is created with the updated variable name</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q11</span>
+      <span class="q-text">Identify missing values in variable <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">Marks</code> from dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">exam_data</code> and replace them with 0.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Replace missing values with 0 */</span>
+<span class="kw">DATA</span> updated_exam_data;
+    <span class="kw2">SET</span> exam_data;
+    <span class="kw2">IF</span> Marks <span class="op">=</span> . <span class="kw2">THEN</span> Marks <span class="op">=</span> <span class="num">0</span>;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=updated_exam_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>Marks = .</code> — Represents missing numeric values in SAS (dot notation)</li>
+          <li><code>IF Marks = . THEN Marks = 0;</code> — Replaces missing values with 0</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q12</span>
+      <span class="q-text">From dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">customer_details</code> containing variable Full_Name, extract the first name using SAS functions.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">DATA</span> customer_firstname;
+    <span class="kw2">SET</span> customer_details;
+    First_Name <span class="op">=</span> <span class="fn">SCAN</span>(Full_Name, <span class="num">1</span>);
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=customer_firstname;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>SCAN(Full_Name, 1)</code> — Extracts the first word (first name) from the Full_Name string</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q13</span>
+      <span class="q-text">Extract the first three characters from a text variable using SUBSTR.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Extract first three characters */</span>
+<span class="kw">DATA</span> new_data;
+    <span class="kw2">SET</span> your_dataset;
+    First_Three <span class="op">=</span> <span class="fn">SUBSTR</span>(text_variable, <span class="num">1</span>, <span class="num">3</span>);
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=new_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>SUBSTR(text_variable, 1, 3)</code> — Extracts 3 characters starting from position 1</li>
+          <li><code>First_Three</code> — New variable storing the extracted result</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q14</span>
+      <span class="q-text">Remove spaces from a character variable using COMPRESS.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Remove spaces from character variable */</span>
+<span class="kw">DATA</span> new_data;
+    <span class="kw2">SET</span> your_dataset;
+    Clean_Text <span class="op">=</span> <span class="fn">COMPRESS</span>(text_variable, <span class="str">' '</span>);
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=new_data;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>COMPRESS(text_variable, ' ')</code> — Removes all spaces from the variable</li>
+          <li><code>Clean_Text</code> — New variable without spaces</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card m1" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num">Q15</span>
+      <span class="q-text">Convert dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">monthly_sales</code> from long format to wide format using PROC TRANSPOSE.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="cm">/* Sort first */</span>
+<span class="kw">PROC SORT</span> DATA=monthly_sales;
+    <span class="kw2">BY</span> ID;
+<span class="kw">RUN</span>;
+
+<span class="cm">/* Convert long format to wide format */</span>
+<span class="kw">PROC TRANSPOSE</span> DATA=monthly_sales
+    <span class="kw2">OUT</span>=wide_sales;
+    <span class="kw2">BY</span> ID;
+    <span class="kw2">ID</span> Month;
+    <span class="kw2">VAR</span> Sales;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=wide_sales;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>BY ID;</code> — Groups data by identifier (Customer/Product)</li>
+          <li><code>ID Month;</code> — Creates new columns based on month values</li>
+          <li><code>VAR Sales;</code> — Values to populate the new columns</li>
+          <li><code>OUT=wide_sales</code> — Output dataset in wide format</li>
+        </ul>
+      </div>
+      <div class="note-box"><strong>Note:</strong> Always sort the dataset by ID before using PROC TRANSPOSE.</div>
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module-title m2" id="mod2" style="margin-top:3rem">
+    Module 2
+    <span style="font-weight:400;font-size:0.9rem;text-transform:none;letter-spacing:0;">Statistical Analysis and Reporting</span>
+    <span class="line"></span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q1</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">employee_salary</code>, calculate the mean, minimum, and maximum of Salary.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC MEANS</span> DATA=employee_salary MEAN MIN MAX;
+    <span class="kw2">VAR</span> Salary;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC MEANS</code> — Calculates descriptive statistics</li>
+          <li><code>MEAN MIN MAX</code> — Specifies which statistics to display</li>
+          <li><code>VAR Salary;</code> — Specifies the variable to analyze</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q2</span>
+      <span class="q-text">Generate a frequency table for <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">Department</code> variable using PROC FREQ.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC FREQ</span> DATA=employee_salary;
+    <span class="kw2">TABLES</span> Department;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC FREQ</code> — Produces frequency tables</li>
+          <li><code>TABLES Department;</code> — Shows count and percentage for each unique department</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q3</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">student_marks</code>, generate frequency distribution for Subject.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC FREQ</span> DATA=student_marks;
+    <span class="kw2">TABLES</span> Subject;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q4</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">sales_data</code>, calculate mean and sum of Quantity and Price.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC MEANS</span> DATA=sales_data MEAN SUM;
+    <span class="kw2">VAR</span> Quantity Price;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q5</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">employee_salary</code>, calculate average salary for each department.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC MEANS</span> DATA=employee_salary MEAN;
+    <span class="kw2">CLASS</span> Department;
+    <span class="kw2">VAR</span> Salary;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>CLASS Department;</code> — Groups results by department</li>
+          <li>Outputs average salary per department without needing to sort first</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q6</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">student_data</code>, generate frequency distribution for Course variable.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC FREQ</span> DATA=student_data;
+    <span class="kw2">TABLES</span> Course;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q7</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">student_scores</code>, perform a t-test to compare marks of male and female students.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC TTEST</span> DATA=student_scores;
+    <span class="kw2">CLASS</span> Gender;
+    <span class="kw2">VAR</span> Marks;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC TTEST</code> — Performs an independent samples t-test</li>
+          <li><code>CLASS Gender;</code> — Defines the two groups to compare</li>
+          <li><code>VAR Marks;</code> — The continuous variable being compared</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q8</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">exam_result</code>, perform Chi-square test between Gender and Pass/Fail.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC FREQ</span> DATA=exam_result;
+    <span class="kw2">TABLES</span> Gender<span class="op">*</span>Result / CHISQ;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>Gender*Result</code> — Creates a cross-tabulation (contingency table)</li>
+          <li><code>/ CHISQ</code> — Requests the Chi-square test statistic and p-value</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q9</span>
+      <span class="q-text">Create a new variable <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">Total_Sales = Quantity × Price</code> in dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">sales_data</code>.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">DATA</span> sales_updated;
+    <span class="kw2">SET</span> sales_data;
+    Total_Sales <span class="op">=</span> Quantity <span class="op">*</span> Price;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=sales_updated;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q10</span>
+      <span class="q-text">Create variable <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">Discount_Price = Price × 0.9</code> and display the dataset.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">DATA</span> sales_updated;
+    <span class="kw2">SET</span> sales_data;
+    Discount_Price <span class="op">=</span> Price <span class="op">*</span> <span class="num">0.9</span>;
+<span class="kw">RUN</span>;
+
+<span class="kw">PROC PRINT</span> DATA=sales_updated;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q11</span>
+      <span class="q-text">Using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">employee_salary</code>, calculate mean and standard deviation of salary.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC MEANS</span> DATA=employee_salary MEAN STD;
+    <span class="kw2">VAR</span> Salary;
+<span class="kw">RUN</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q12</span>
+      <span class="q-text">Perform simple linear regression using dataset <code style="font-family:monospace;font-size:0.85em;background:#f5f0e8;padding:0 4px;border-radius:3px">advertising_data</code> — Sales as dependent, TV as independent variable.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC REG</span> DATA=advertising_data;
+    <span class="kw2">MODEL</span> Sales <span class="op">=</span> TV;
+<span class="kw">RUN</span>;
+<span class="kw">QUIT</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>PROC REG</code> — Performs OLS regression</li>
+          <li><code>MODEL Sales = TV;</code> — Sales is the dependent variable, TV is the predictor</li>
+          <li><code>QUIT;</code> — Required to exit interactive PROC REG</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q13</span>
+      <span class="q-text">Perform multiple regression using Sales as dependent variable and TV and Radio as independent variables.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC REG</span> DATA=advertising_data;
+    <span class="kw2">MODEL</span> Sales <span class="op">=</span> TV Radio;
+<span class="kw">RUN</span>;
+<span class="kw">QUIT</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li>Adding multiple predictors after <code>=</code> performs multiple linear regression</li>
+          <li>Output includes coefficients, p-values, and R² for the full model</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q14</span>
+      <span class="q-text">Export SAS output results to a PDF file using ODS.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">ODS PDF</span> FILE=<span class="str">"output.pdf"</span>;
+
+<span class="kw">PROC PRINT</span> DATA=employee_salary;
+<span class="kw">RUN</span>;
+
+<span class="kw">ODS PDF CLOSE</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>ODS PDF FILE=</code> — Opens a PDF output destination</li>
+          <li>All procedures between <code>ODS PDF</code> and <code>ODS PDF CLOSE</code> are written to the file</li>
+          <li><code>ODS PDF CLOSE;</code> — Closes and saves the PDF</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card m2" onclick="toggle(this)">
+    <div class="q-header">
+      <span class="q-num" style="background:var(--mod2)">Q15</span>
+      <span class="q-text">Generate a summary report showing average salary by department.</span>
+      <span class="q-arrow">▶</span>
+    </div>
+    <div class="q-body">
+      <div class="code-wrap">
+        <div class="code-label">SAS Code</div>
+        <button class="copy-btn" onclick="copyCode(event,this)">copy</button>
+        <pre><span class="kw">PROC MEANS</span> DATA=employee_salary MEAN;
+    <span class="kw2">CLASS</span> Department;
+    <span class="kw2">VAR</span> Salary;
+<span class="kw">RUN</span>;</pre>
+      </div>
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <ul>
+          <li><code>CLASS Department;</code> — Groups results by each department</li>
+          <li>Output is a clean summary table — average salary per department</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
 <script>
-  function copyCode(btn) {
+  // Toggle accordion
+  function toggle(card) {
+    const isOpen = card.classList.contains('open');
+    card.classList.toggle('open', !isOpen);
+  }
+
+  // Scroll to section
+  function scrollTo(id) {
+    const el = document.querySelector(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Copy button with fallback
+  function copyCode(e, btn) {
+    e.stopPropagation();
     const pre = btn.nextElementSibling;
     const text = pre.innerText;
 
-    function onSuccess() {
-      btn.innerHTML = '&#10003; Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.innerHTML = '&#128203; Copy';
-        btn.classList.remove('copied');
-      }, 2000);
+    function ok() {
+      btn.textContent = 'copied!';
+      btn.style.color = '#3ddc84';
+      btn.style.borderColor = '#3ddc84';
+      setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; btn.style.borderColor = ''; }, 1800);
     }
 
-    // Try modern clipboard API first
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess));
+      navigator.clipboard.writeText(text).then(ok).catch(() => fallback(text, ok));
     } else {
-      fallbackCopy(text, onSuccess);
+      fallback(text, ok);
     }
   }
 
-  function fallbackCopy(text, onSuccess) {
+  function fallback(text, cb) {
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
     document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    try {
-      document.execCommand('copy');
-      onSuccess();
-    } catch (e) {
-      alert('Copy failed — please manually select the code and press Ctrl+C / Cmd+C.');
-    }
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); cb(); } catch(e) { alert('Could not copy. Please select manually.'); }
     document.body.removeChild(ta);
+  }
+
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+    document.getElementById('pbar').style.width = pct + '%';
+  });
+
+  // Search / filter
+  function filterCards() {
+    const q = document.getElementById('searchBox').value.toLowerCase();
+    document.querySelectorAll('.q-card').forEach(card => {
+      const text = card.innerText.toLowerCase();
+      card.style.display = text.includes(q) ? '' : 'none';
+    });
   }
 </script>
 </body>
